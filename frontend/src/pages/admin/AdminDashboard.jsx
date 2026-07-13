@@ -19,7 +19,7 @@ const AdminDashboard = () => {
     const [inquiriesCount, setInquiriesCount] = useState(0);
 
     useEffect(() => {
-        fetchProperties();
+        fetchProperties({ listingType: null }); // Fetch all properties (sale and rent)
         fetchInquiriesCount();
     }, []);
 
@@ -134,6 +134,7 @@ const AdminDashboard = () => {
                                         <th className="px-8 py-4 text-left">Property</th>
                                         <th className="px-8 py-4 text-left">Location</th>
                                         <th className="px-8 py-4 text-left">Price</th>
+                                        <th className="px-8 py-4 text-left">Type</th>
                                         <th className="px-8 py-4 text-left">Status</th>
                                     </tr>
                                 </thead>
@@ -151,6 +152,16 @@ const AdminDashboard = () => {
                                             </td>
                                             <td className="px-8 py-6 text-sm text-gray-500">{p.location}</td>
                                             <td className="px-8 py-6 font-bold text-primary-dark">₹{(p.price / 100000).toFixed(1)}L</td>
+                                            <td className="px-8 py-6">
+                                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${
+                                                    (p.listingType || 'sale') === 'sale' 
+                                                        ? 'bg-blue-50 text-blue-600' 
+                                                        : 'bg-purple-50 text-purple-600'
+                                                }`}>
+                                                    {(p.listingType || 'sale').toUpperCase()}
+                                                    {p.listingType === 'rent' && p.tenantType && ` • ${p.tenantType.toUpperCase()}`}
+                                                </span>
+                                            </td>
                                             <td className="px-8 py-6">
                                                 <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${p.featured ? 'bg-gold/10 text-gold' : 'bg-gray-100 text-gray-400'}`}>
                                                     {p.featured ? 'Featured' : 'Standard'}
