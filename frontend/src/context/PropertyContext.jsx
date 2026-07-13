@@ -23,10 +23,15 @@ export const PropertyProvider = ({ children }) => {
                 }
             });
             
-            // Determine the listingType to use
-            const effectiveListingType = params.listingType !== null && params.listingType !== undefined 
-                ? params.listingType 
-                : listingType;
+            // Determine the listingType to use: if params explicitly provides it (even null), use it; otherwise use default
+            let effectiveListingType;
+            if (params.listingType === null) {
+                effectiveListingType = null;
+            } else if (params.listingType !== undefined) {
+                effectiveListingType = params.listingType;
+            } else {
+                effectiveListingType = listingType;
+            }
             
             // Only include listingType if it's not null
             if (effectiveListingType !== null) {
