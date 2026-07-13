@@ -113,9 +113,12 @@ const PropertyCard = ({ property }) => {
             {/* Top Media Area - 55% */}
             <Link to={`/property/${property.slug}`} className="relative h-[55%] shrink-0 overflow-hidden bg-black block">
                 {renderMedia()}
-                <div className="absolute top-3 left-3">
+                <div className="absolute top-3 left-3 flex gap-1.5">
                     <span className="bg-gold text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
                         {property.propertyType}
+                    </span>
+                    <span className="bg-primary-dark text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                        {property.listingType || 'sale'}
                     </span>
                 </div>
             </Link>

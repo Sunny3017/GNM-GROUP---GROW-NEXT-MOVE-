@@ -10,6 +10,19 @@ import axios from 'axios'
 // Configure axios base URL
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
 
+// Add axios interceptor to handle 401 errors
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // If 401, remove admin from localStorage and reload to redirect to login
+      localStorage.removeItem('adminInfo');
+      window.location.href = '/admin/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>

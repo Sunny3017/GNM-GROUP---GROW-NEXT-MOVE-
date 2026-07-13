@@ -5,6 +5,12 @@ const propertySchema = new mongoose.Schema({
     slug: { type: String, required: true, unique: true },
     societyName: { type: String, required: true },
     propertyType: { type: String, required: true }, // e.g., Apartment, Villa, etc.
+    listingType: { type: String, required: true, enum: ['sale', 'rent'], default: 'sale' }, // 'sale' or 'rent'
+    tenantType: { 
+        type: String, 
+        enum: ['family', 'bachelors'],
+        default: null
+    }, // required only when listingType is 'rent'
     bhk: { type: String, required: true }, // e.g., 1BHK, 2BHK, etc.
     size: { type: Number, required: true }, // in Sq Ft
     price: { type: Number, required: true },

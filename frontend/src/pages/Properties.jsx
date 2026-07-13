@@ -6,7 +6,16 @@ import { Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Search } from 'lu
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Properties = () => {
-    const { properties, loading, pagination, fetchProperties } = useContext(PropertyContext);
+    const { 
+        properties, 
+        loading, 
+        pagination, 
+        fetchProperties, 
+        listingType, 
+        setListingType, 
+        tenantType, 
+        setTenantType 
+    } = useContext(PropertyContext);
     const [searchParams, setSearchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
 
@@ -33,10 +42,12 @@ const Properties = () => {
             propertyType: searchParams.get('type'),
             sort: searchParams.get('sort'),
             location: searchParams.get('search'),
-            pageNumber: searchParams.get('pageNumber')
+            pageNumber: searchParams.get('pageNumber'),
+            listingType,
+            tenantType
         };
         fetchProperties(params);
-    }, [searchParams]);
+    }, [searchParams, listingType, tenantType]);
 
     const handleFilterChange = (name, value) => {
         const newFilters = { ...filters, [name]: value, pageNumber: 1 };
@@ -65,8 +76,66 @@ const Properties = () => {
                 {/* Header */}
                 <div className="mb-12">
                     <span className="text-gold font-bold tracking-[0.3em] uppercase text-sm mb-4 block text-center">Exclusive Listings</span>
-                    <h1 className="text-4xl md:text-5xl font-bold font-serif text-primary-dark text-center mb-4">Our Properties</h1>
-                    <div className="w-20 h-1.5 bg-gold mx-auto mb-8"></div>
+                    <h1 className="text-4xl md:text-5xl font-bold font-serif text-primary-dark text-center mb-8">Our Properties</h1>
+                    
+                    {/* Property Type Toggle */}
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="bg-gray-100 p-1.5 rounded-2xl inline-flex">
+                            <button 
+                                onClick={() => setListingType('sale')}
+                                className={`px-8 py-3 rounded-xl font-bold uppercase tracking-widest transition-all duration-300 ${
+                                    listingType === 'sale' 
+                                    ? 'bg-primary-dark text-white shadow-lg' 
+                                    : 'text-gray-500 hover:text-primary-dark'
+                                }`}
+                            >
+                                Sale
+                            </button>
+                            <button 
+                                onClick={() => setListingType('rent')}
+                                className={`px-8 py-3 rounded-xl font-bold uppercase tracking-widest transition-all duration-300 ${
+                                    listingType === 'rent' 
+                                    ? 'bg-primary-dark text-white shadow-lg' 
+                                    : 'text-gray-500 hover:text-primary-dark'
+                                }`}
+                            >
+                                Rent
+                            </button>
+                        </div>
+                        
+                        {/* Tenant Type Toggle (Only for Rent) */}
+                        <AnimatePresence>
+                            {listingType === 'rent' && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="bg-gray-100 p-1 rounded-xl inline-flex"
+                                >
+                                    <button 
+                                        onClick={() => setTenantType('family')}
+                                        className={`px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                                            tenantType === 'family' 
+                                            ? 'bg-gold text-white shadow' 
+                                            : 'text-gray-500 hover:text-gold'
+                                        }`}
+                                    >
+                                        Family
+                                    </button>
+                                    <button 
+                                        onClick={() => setTenantType('bachelors')}
+                                        className={`px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                                            tenantType === 'bachelors' 
+                                            ? 'bg-gold text-white shadow' 
+                                            : 'text-gray-500 hover:text-gold'
+                                        }`}
+                                    >
+                                        Bachelors
+                                    </button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
 
                 {/* Search & Filter Bar */}

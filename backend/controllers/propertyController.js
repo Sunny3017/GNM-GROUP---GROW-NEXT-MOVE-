@@ -7,30 +7,60 @@ const asyncHandler = require('../utils/asyncHandler');
 // @route   GET /api/properties
 // @access  Public
 const getProperties = asyncHandler(async (req, res) => {
+    console.log('getProperties query params:', req.query);
     const pageSize = 9;
     const page = Number(req.query.pageNumber) || 1;
 
-    const { bhk, minPrice, maxPrice, location, society, propertyType, sort } = req.query;
+    const { bhk, minPrice, maxPrice, location, society, propertyType, listingType, tenantType, sort } = req.query;
 
     let query = {};
+    let mustConditions = [];
+    let orConditions = [];
 
-    if (bhk) query.bhk = bhk;
-    if (propertyType) query.propertyType = propertyType;
+    if (bhk) mustConditions.push({ bhk });
+    if (propertyType) mustConditions.push({ propertyType });
+    if (tenantType) mustConditions.push({ tenantType });
+    
+    if (listingType) {
+        if (listingType === 'sale') {
+            mustConditions.push({
+                $or: [
+                    { listingType: 'sale' },
+                    { listingType: { $exists: false } }
+                ]
+            });
+        } else {
+            mustConditions.push({ listingType: 'rent' });
+        }
+    }
     
     if (location) {
-        query.$or = [
+        orConditions.push(
             { title: { $regex: location, $options: 'i' } },
             { societyName: { $regex: location, $options: 'i' } },
             { location: { $regex: location, $options: 'i' } }
-        ];
+        );
     }
     
-    if (society) query.societyName = { $regex: society, $options: 'i' };
+    if (society) mustConditions.push({ societyName: { $regex: society, $options: 'i' } });
     
     if (minPrice || maxPrice) {
-        query.price = {};
-        if (minPrice) query.price.$gte = Number(minPrice);
-        if (maxPrice) query.price.$lte = Number(maxPrice);
+        const priceCondition = {};
+        if (minPrice) priceCondition.$gte = Number(minPrice);
+        if (maxPrice) priceCondition.$lte = Number(maxPrice);
+        mustConditions.push({ price: priceCondition });
+    }
+
+    // Combine all conditions
+    if (mustConditions.length > 0) {
+        query.$and = mustConditions;
+    }
+    if (orConditions.length > 0) {
+        if (query.$and) {
+            query.$and.push({ $or: orConditions });
+        } else {
+            query.$or = orConditions;
+        }
     }
 
     let sortQuery = { createdAt: -1 };
@@ -166,6 +196,7 @@ const searchProperties = asyncHandler(async (req, res) => {
 // @route   GET /api/properties/featured
 // @access  Public
 const getFeaturedProperties = asyncHandler(async (req, res) => {
+    console.log('getFeaturedProperties called');
     let properties = await Property.find({ featured: true }).limit(6);
     
     // Fallback: If no featured properties, get latest 6

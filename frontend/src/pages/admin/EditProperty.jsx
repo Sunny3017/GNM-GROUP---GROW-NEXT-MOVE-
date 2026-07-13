@@ -22,6 +22,8 @@ const EditProperty = () => {
         title: '',
         societyName: '',
         propertyType: '',
+        listingType: 'sale',
+        tenantType: '',
         bhk: '',
         size: '',
         price: '',
@@ -51,7 +53,11 @@ const EditProperty = () => {
         const fetchProperty = async () => {
             try {
                 const { data } = await axios.get(`/api/properties/${id}`);
-                setFormData(data);
+                // Convert null tenantType to empty string for React select
+                setFormData({
+                    ...data,
+                    tenantType: data.tenantType || (data.listingType === 'rent' ? 'family' : '')
+                });
                 setFetching(false);
             } catch (error) {
                 toast.error('Failed to fetch property details');
@@ -63,10 +69,20 @@ const EditProperty = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        setFormData(prev => {
+            const newData = {
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            };
+            // If listingType is changed to 'sale', set tenantType to empty string
+            if (name === 'listingType' && value === 'sale') {
+                newData.tenantType = '';
+            } else if (name === 'listingType' && value === 'rent' && !prev.tenantType) {
+                // If listingType is changed to 'rent' and tenantType is empty, default to 'family'
+                newData.tenantType = 'family';
+            }
+            return newData;
+        });
     };
 
     const handleAmenityChange = (amenity) => {
@@ -183,7 +199,12 @@ const EditProperty = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.put(`/api/properties/${id}`, formData, {
+            // Prepare data: set tenantType to null if listingType is sale
+            const submitData = {
+                ...formData,
+                tenantType: formData.listingType === 'rent' ? formData.tenantType : null
+            };
+            await axios.put(`/api/properties/${id}`, submitData, {
                 headers: { Authorization: `Bearer ${admin.token}` }
             });
             toast.success('Property updated successfully!');
@@ -262,6 +283,30 @@ const EditProperty = () => {
                                     <option value="Plot">Plot</option>
                                 </select>
                             </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Listing Type</label>
+                                <select 
+                                    name="listingType"
+                                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-gold/20 outline-none transition-all font-medium"
+                                    value={formData.listingType} onChange={handleChange}
+                                >
+                                    <option value="sale">Sale</option>
+                                    <option value="rent">Rent</option>
+                                </select>
+                            </div>
+                            {formData.listingType === 'rent' && (
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Tenant Type</label>
+                                    <select 
+                                        name="tenantType"
+                                        className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-gold/20 outline-none transition-all font-medium"
+                                        value={formData.tenantType} onChange={handleChange}
+                                    >
+                                        <option value="family">Family</option>
+                                        <option value="bachelors">Bachelors</option>
+                                    </select>
+                                </div>
+                            )}
                         </div>
                     </div>
 
