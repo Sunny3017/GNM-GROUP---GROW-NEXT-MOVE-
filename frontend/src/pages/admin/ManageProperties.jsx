@@ -17,7 +17,7 @@ const ManageProperties = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        fetchProperties();
+        fetchProperties({ listingType: null }); // Fetch all properties (sale and rent)
     }, []);
 
     const handleDelete = async (id) => {
@@ -27,7 +27,7 @@ const ManageProperties = () => {
                     headers: { Authorization: `Bearer ${admin.token}` }
                 });
                 toast.success('Property deleted successfully');
-                fetchProperties();
+                fetchProperties({ listingType: null });
             } catch (error) {
                 toast.error(error.response?.data?.message || 'Delete failed');
             }
@@ -89,6 +89,7 @@ const ManageProperties = () => {
                                 <tr>
                                     <th className="px-8 py-6 text-left">Property Details</th>
                                     <th className="px-8 py-6 text-left">Pricing & Size</th>
+                                    <th className="px-8 py-6 text-left">Type</th>
                                     <th className="px-8 py-6 text-left">Status</th>
                                     <th className="px-8 py-6 text-right">Actions</th>
                                 </tr>
@@ -97,7 +98,7 @@ const ManageProperties = () => {
                                 {loading ? (
                                     [1, 2, 3].map(i => (
                                         <tr key={i} className="animate-pulse">
-                                            <td colSpan="4" className="px-8 py-12"><div className="h-12 bg-gray-100 rounded-xl"></div></td>
+                                            <td colSpan="5" className="px-8 py-12"><div className="h-12 bg-gray-100 rounded-xl"></div></td>
                                         </tr>
                                     ))
                                 ) : (
@@ -135,6 +136,16 @@ const ManageProperties = () => {
                                                         <p className="font-bold text-primary-dark text-lg">₹{p.price.toLocaleString('en-IN')}</p>
                                                         <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">{p.size} Sq Ft • {p.bhk}</p>
                                                     </div>
+                                                </td>
+                                                <td className="px-8 py-6">
+                                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] ${
+                                                        (p.listingType || 'sale') === 'sale' 
+                                                        ? 'bg-blue-50 text-blue-600' 
+                                                        : 'bg-purple-50 text-purple-600'
+                                                    }`}>
+                                                        {(p.listingType || 'sale').toUpperCase()}
+                                                        {p.listingType === 'rent' && p.tenantType && ` • ${p.tenantType.toUpperCase()}`}
+                                                    </span>
                                                 </td>
                                                 <td className="px-8 py-6">
                                                     <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] ${

@@ -15,11 +15,19 @@ export const PropertyProvider = ({ children }) => {
     const fetchProperties = async (params = {}) => {
         setLoading(true);
         try {
-            const requestParams = { 
-                ...params, 
-                listingType: params.listingType || listingType,
-                tenantType: (params.listingType || listingType) === 'rent' ? (params.tenantType || tenantType) : undefined
-            };
+            const requestParams = { ...params };
+            // Only set listingType if it's explicitly provided in params OR if params doesn't have it (for main Properties page)
+            // If params.listingType is explicitly null, don't include it (fetch all)
+            if (params.listingType !== null && params.listingType !== undefined) {
+                requestParams.listingType = params.listingType;
+            } else if (params.listingType === undefined) {
+                // If no listingType in params, use the default (for main Properties page)
+                requestParams.listingType = listingType;
+            }
+            // Only set tenantType if listingType is 'rent'
+            if (requestParams.listingType === 'rent') {
+                requestParams.tenantType = params.tenantType || tenantType;
+            }
             console.log('Fetching properties with params:', requestParams);
             const { data } = await axios.get('/api/properties', { 
                 params: requestParams
