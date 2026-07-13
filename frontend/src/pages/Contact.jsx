@@ -55,7 +55,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Location</p>
-                                        <p className="text-lg font-medium text-primary-dark">123 Luxury Lane, Premium Heights,<br />Golf Course Road, Gurgaon, India</p>
+                                        <p className="text-lg font-medium text-primary-dark">Plot No. 84, Basement, Opposite Shanti Gopal Hospital,<br />Ahinsa Khand-2, Indirapuram, Ghaziabad – 201014</p>
                                     </div>
                                 </div>
 

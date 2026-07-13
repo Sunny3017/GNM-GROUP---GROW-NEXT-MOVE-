@@ -60,7 +60,7 @@ const Footer = () => {
                             </li>
                             <li className="flex items-start text-gray-400">
                                 <MapPin size={18} className="mr-3 mt-1 text-gold" />
-                                <span>123 Luxury Lane, Premium Heights,<br />New Delhi, India</span>
+                                <span>Plot No. 84, Basement, Opposite Shanti Gopal Hospital,<br />Ahinsa Khand-2, Indirapuram, Ghaziabad – 201014</span>
                             </li>
                         </ul>
                     </div>
