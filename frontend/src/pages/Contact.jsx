@@ -65,7 +65,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Phone</p>
-                                        <p className="text-lg font-medium text-primary-dark">+91 88269 43792</p>
+                                        <p className="text-lg font-medium text-primary-dark">+91 88600 69778</p>
                                         <p className="text-sm text-gray-500">Mon-Sat, 9am to 7pm</p>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@ const Contact = () => {
                         <div className="bg-primary-dark p-8 rounded-[2rem] text-white">
                             <h3 className="text-2xl font-serif font-bold mb-6">Direct Connect</h3>
                             <div className="space-y-4">
-                                <a href="https://wa.me/918826943792" className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-white/10 group">
+                                <a href="https://wa.me/918860069778" className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-white/10 group">
                                     <div className="flex items-center gap-4">
                                         <MessageSquare className="text-gold" />
                                         <span className="font-bold">Chat on WhatsApp</span>
@@ -129,7 +129,7 @@ const Contact = () => {
                                     <input 
                                         type="tel" name="phone" required
                                         className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-gold/20 outline-none transition-all font-medium"
-                                        placeholder="+91 88269 43792"
+                                        placeholder="+91 88600 69778"
                                         value={formData.phone}
                                         onChange={handleChange}
                                     />

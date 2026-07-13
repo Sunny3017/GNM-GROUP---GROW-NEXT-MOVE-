@@ -35,7 +35,7 @@ const PropertyCard = ({ property }) => {
         }
     };
 
-    const whatsappLink = `https://wa.me/918826943792?text=${encodeURIComponent(
+    const whatsappLink = `https://wa.me/918860069778?text=${encodeURIComponent(
         `I'm interested in this property: ${property.title} in ${property.societyName}.\nDetails: ${window.location.origin}/property/${property.slug}`
     )}`;
 

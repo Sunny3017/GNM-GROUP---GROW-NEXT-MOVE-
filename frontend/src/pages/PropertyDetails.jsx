@@ -306,13 +306,13 @@ const PropertyDetails = () => {
                                 
                                 <div className="space-y-4">
                                     <a 
-                                        href="tel:+918826943792" 
+                                        href="tel:+918860069778" 
                                         className="flex items-center justify-center w-full py-4 bg-gold text-white rounded-xl font-bold uppercase tracking-widest hover:bg-white hover:text-primary-dark transition-all duration-300 group shadow-lg shadow-gold/20"
                                     >
                                         <Phone size={20} className="mr-3 group-hover:scale-110 transition-transform" /> Call Now
                                     </a>
                                     <a 
-                                        href={`https://wa.me/918826943792?text=I am interested in ${property.title} in ${property.societyName}`} 
+                                        href={`https://wa.me/918860069778?text=I am interested in ${property.title} in ${property.societyName}`} 
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center justify-center w-full py-4 bg-[#25D366] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#128C7E] transition-all duration-300 group shadow-lg shadow-green-500/20"
