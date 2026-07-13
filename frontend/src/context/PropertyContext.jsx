@@ -15,19 +15,32 @@ export const PropertyProvider = ({ children }) => {
     const fetchProperties = async (params = {}) => {
         setLoading(true);
         try {
-            const requestParams = { ...params };
-            // Only set listingType if it's explicitly provided in params OR if params doesn't have it (for main Properties page)
-            // If params.listingType is explicitly null, don't include it (fetch all)
-            if (params.listingType !== null && params.listingType !== undefined) {
-                requestParams.listingType = params.listingType;
-            } else if (params.listingType === undefined) {
-                // If no listingType in params, use the default (for main Properties page)
-                requestParams.listingType = listingType;
+            // Clean up params: remove undefined values
+            const requestParams = {};
+            Object.keys(params).forEach(key => {
+                if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+                    requestParams[key] = params[key];
+                }
+            });
+            
+            // Determine the listingType to use
+            const effectiveListingType = params.listingType !== null && params.listingType !== undefined 
+                ? params.listingType 
+                : listingType;
+            
+            // Only include listingType if it's not null
+            if (effectiveListingType !== null) {
+                requestParams.listingType = effectiveListingType;
             }
-            // Only set tenantType if listingType is 'rent'
-            if (requestParams.listingType === 'rent') {
+            
+            // Only include tenantType if listingType is 'rent'
+            if (effectiveListingType === 'rent') {
                 requestParams.tenantType = params.tenantType || tenantType;
+            } else {
+                // Remove tenantType if present
+                delete requestParams.tenantType;
             }
+            
             console.log('Fetching properties with params:', requestParams);
             const { data } = await axios.get('/api/properties', { 
                 params: requestParams

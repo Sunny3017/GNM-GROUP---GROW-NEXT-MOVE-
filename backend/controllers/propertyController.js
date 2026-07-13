@@ -19,7 +19,6 @@ const getProperties = asyncHandler(async (req, res) => {
 
     if (bhk) mustConditions.push({ bhk });
     if (propertyType) mustConditions.push({ propertyType });
-    if (tenantType) mustConditions.push({ tenantType });
     
     if (listingType) {
         if (listingType === 'sale') {
@@ -31,6 +30,8 @@ const getProperties = asyncHandler(async (req, res) => {
             });
         } else {
             mustConditions.push({ listingType: 'rent' });
+            // Only use tenantType if listingType is 'rent'
+            if (tenantType) mustConditions.push({ tenantType });
         }
     }
     
